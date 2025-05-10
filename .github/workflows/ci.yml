@@ -2,25 +2,24 @@ name: CI
 
 on:
   push:
-    branches: [main]  # Detecta cambios en la rama principal
+    branches: [main]  # o 'master' si tu rama principal se llama así
   pull_request:
-    branches: [main]  # Detecta pull requests hacia la rama principal
+    branches: [main]
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Usa Ubuntu como el sistema operativo
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3  # Extrae el código del repositorio
+      uses: actions/checkout@v3
 
-    # Backend (Java + Maven)
     - name: Set up Java
-      uses: actions/setup-java@v3  # Configura Java
+      uses: actions/setup-java@v3
       with:
-        java-version: '17'  # Define la versión de Java
-        distribution: 'temurin'  # Usar la distribución Temurin de OpenJDK
+        java-version: '17'
+        distribution: 'temurin'
 
     - name: Build Backend
-      working-directory: ./backend  # Asegúrate de que 'backend' es la carpeta correcta
-      run: mvn clean install  # Ejecuta Maven para compilar el backend
+      working-directory: Back/Backend
+      run: mvn clean install
