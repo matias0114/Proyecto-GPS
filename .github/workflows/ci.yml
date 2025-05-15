@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [master]  # o 'master' si tu rama principal se llama así
+    branches: [master]  
   pull_request:
     branches: [master]
 
