@@ -50,3 +50,4 @@ jobs:
         file: ./Back/Backend/Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+        
