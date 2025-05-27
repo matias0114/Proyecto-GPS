@@ -49,8 +49,9 @@ jobs:
         context: ./Back/Backend
         file: ./Back/Backend/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-              ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
     - name: Replace image tag in Kubernetes manifest
       run: |
         sed -i "s|matiasjara1901244/proyectogps-backend:__TAG__|matiasjara1901244/proyectogps-backend:${{ github.sha }}|g" k8s/backend-deployment.yaml
