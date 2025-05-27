@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: matiasjara1901244/proyectogps-backend:__TAG__
+          image: matiasjara1901244/proyectogps-backend:4675a03d34a94a54770bb3b339c3a98a1068c28f
           ports:
             - containerPort: 8080
           env:
