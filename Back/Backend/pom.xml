@@ -69,6 +69,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+<<<<<<< HEAD
 		<!-- Actuator para exponer endpoints de métricas -->
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
@@ -79,6 +80,12 @@
 		<dependency>
     		<groupId>io.micrometer</groupId>
     		<artifactId>micrometer-registry-prometheus</artifactId>
+=======
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+>>>>>>> 228b6b9d974838490aa384a74955405a1640e170
 		</dependency>
 	</dependencies>
 
