@@ -1,3 +1,4 @@
+
 package com.ProyectoGPS.Backend.service;
 
 import java.time.LocalDateTime;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.ProyectoGPS.Backend.dto.PrecioUploadRequest;
 import com.ProyectoGPS.Backend.model.Precio;
+import com.ProyectoGPS.Backend.model.Producto;
 import com.ProyectoGPS.Backend.repository.PrecioRepository;
+import com.ProyectoGPS.Backend.repository.ProductoRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -18,11 +21,21 @@ public class PrecioService {
 
     @Autowired
     private PrecioRepository precioRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
+
     @Transactional
     public void guardarLista(List<PrecioUploadRequest> lista) {
         List<Precio> entidades = lista.stream().map(req -> {
+            Producto producto = productoRepository
+                .findByCodigo(req.getProductoCodigo())
+                .orElseThrow(() -> new RuntimeException(
+                    "Producto no encontrado: " + req.getProductoCodigo()
+                ));
+
             Precio entidad = new Precio();
-            entidad.setProductoCodigo(req.getProductoCodigo());
+            entidad.setProducto(producto);
             entidad.setPrecioUnitario(req.getPrecioUnitario());
             entidad.setFechaActualizacion(LocalDateTime.now());
             return entidad;
@@ -30,5 +43,4 @@ public class PrecioService {
 
         precioRepository.saveAll(entidades);
     }
-
 }

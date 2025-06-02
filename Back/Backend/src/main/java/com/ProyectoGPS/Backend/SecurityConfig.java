@@ -12,13 +12,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/actuator/prometheus").permitAll()  // Permitir Prometheus
-                .anyRequest().authenticated()                         
+                .requestMatchers("/actuator/prometheus").permitAll()
+                .anyRequest().permitAll() // Cambia 'authenticated()' por 'permitAll()'
             )
-            .csrf(csrf -> csrf.disable()) 
-            .httpBasic(); 
+            .csrf(csrf -> csrf.disable())
+            .httpBasic();
 
         return http.build();
     }
 }
-

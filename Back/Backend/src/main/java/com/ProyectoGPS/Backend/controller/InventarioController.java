@@ -1,14 +1,27 @@
 package com.ProyectoGPS.Backend.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ProyectoGPS.Backend.dto.InventarioUploadRequest;
+import com.ProyectoGPS.Backend.service.InventarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/inventarios")
 public class InventarioController {
 
+    @Autowired
+    private InventarioService inventarioService;
 
-    // Aquí puedes agregar otros endpoints relacionados con inventarios si los necesitas
-
+    @PostMapping
+    public ResponseEntity<String> guardarInventarios(@RequestBody List<InventarioUploadRequest> lista) {
+        try {
+            inventarioService.guardarInventarios(lista);
+            return ResponseEntity.ok("Inventarios guardados correctamente.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al guardar inventarios: " + e.getMessage());
+        }
+    }
 }

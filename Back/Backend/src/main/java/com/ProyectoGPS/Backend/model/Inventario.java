@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,8 +19,9 @@ public class Inventario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "producto_codigo", nullable = false)
-    private String productoCodigo;
+    @ManyToOne
+    @JoinColumn(name = "producto_codigo", referencedColumnName = "codigo", nullable = false)
+    private Producto producto;
 
     @Column(name = "cantidad_inicial", nullable = false)
     private Integer cantidadInicial;
@@ -27,27 +30,35 @@ public class Inventario {
     private LocalDateTime fechaRegistro;
 
     // Getters y setters
+
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
-    public String getProductoCodigo() {
-        return productoCodigo;
+
+    public Producto getProducto() {
+        return producto;
     }
-    public void setProductoCodigo(String productoCodigo) {
-        this.productoCodigo = productoCodigo;
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
     }
+
     public Integer getCantidadInicial() {
         return cantidadInicial;
     }
+
     public void setCantidadInicial(Integer cantidadInicial) {
         this.cantidadInicial = cantidadInicial;
     }
+
     public LocalDateTime getFechaRegistro() {
         return fechaRegistro;
     }
+
     public void setFechaRegistro(LocalDateTime fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
