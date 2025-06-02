@@ -63,4 +63,23 @@ public class PrecioController {
         }).toList();
         return ResponseEntity.ok(dtos);
     }
+
+        @GetMapping("/consulta")
+    public ResponseEntity<?> consultarPrecio(@RequestParam String codigo) {
+        var productoOpt = productoRepository.findByCodigo(codigo);
+        if (productoOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Producto no encontrado");
+        }
+        // Busca el precio más reciente para el producto
+        var precios = precioRepository.findAll().stream()
+            .filter(p -> p.getProducto().getCodigo().equals(codigo))
+            .sorted((a, b) -> b.getFechaActualizacion().compareTo(a.getFechaActualizacion()))
+            .toList();
+        if (precios.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Precio no encontrado para el producto");
+        }
+        return ResponseEntity.ok(precios.get(0));
+    }
 }
