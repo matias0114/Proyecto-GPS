@@ -7,24 +7,17 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gps_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-
-  # Postgres Exporter
+      SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-d0sgjdemcj7s73f0as7g-a.oregon-postgres.render.com:5432/proyectogps?sslmode=require
+      SPRING_DATASOURCE_USERNAME: gps
+      SPRING_DATASOURCE_PASSWORD: D4bgSZVUlMYcx2fdtLvFED28lEl1Gsy5
   postgres_exporter:
     image: prometheuscommunity/postgres-exporter
     container_name: postgres_exporter
     restart: always
     environment:
-      # Conexión al Postgres interno (ajusta usuario/contraseña/bd)
-      DATA_SOURCE_NAME: "postgresql://postgres:postgres@postgres:5432/gps_db?sslmode=disable"
+      DATA_SOURCE_NAME: "postgresql://gps:D4bgSZVUlMYcx2fdtLvFED28lEl1Gsy5@dpg-d0sgjdemcj7s73f0as7g-a.oregon-postgres.render.com:5432/proyectogps?sslmode=require"
     ports:
       - "9187:9187"
-    depends_on:
-      - postgres
-
-  # Prometheus
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -42,6 +35,6 @@ services:
       - "3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
-
+      
 volumes:
   grafana-data:
