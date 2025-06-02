@@ -6,7 +6,3 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['backend:8080']
-
-  - job_name: 'postgresql'
-    static_configs:
-      - targets: ['postgres_exporter:9187']
