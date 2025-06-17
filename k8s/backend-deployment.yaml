@@ -7,8 +7,8 @@ spec:
     app: backend
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 8081
+      targetPort: 8081
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -28,7 +28,7 @@ spec:
         - name: backend
           image: matiasjara1901244/proyectogps-backend:4675a03d34a94a54770bb3b339c3a98a1068c28f
           ports:
-            - containerPort: 8080
+            - containerPort: 8081
           env:
             - name: SPRING_DATASOURCE_URL
               value: jdbc:postgresql://postgres:5432/gps_db

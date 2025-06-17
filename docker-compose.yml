@@ -5,7 +5,7 @@ services:
     build: ./Back/Backend
     container_name: springboot-app
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-d0sgjdemcj7s73f0as7g-a.oregon-postgres.render.com:5432/proyectogps?sslmode=require
       SPRING_DATASOURCE_USERNAME: gps
@@ -35,6 +35,16 @@ services:
       - "3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
+
+  node_exporter:
+    image: prom/node-exporter
+    container_name: node_exporter
+    restart: always
+    ports:
+      - "9100:9100"
+
       
 volumes:
   grafana-data:
+
+  

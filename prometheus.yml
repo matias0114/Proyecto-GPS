@@ -5,8 +5,12 @@ scrape_configs:
   - job_name: 'springboot'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['backend:8080']
+      - targets: ['backend:8081']
 
   - job_name: 'postgresql'
     static_configs:
       - targets: ['postgres_exporter:9187']
+
+  - job_name: 'nodeexporter'
+    static_configs:
+      - targets: ['node_exporter:9100']
