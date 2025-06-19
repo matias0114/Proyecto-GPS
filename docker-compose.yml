@@ -43,8 +43,11 @@ services:
     #ports:
     #  - "9100:9100"
 
-  jenkins:
-    image: jenkins/jenkins:lts
+  jjenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    image: jenkins-with-docker
     container_name: jenkins
     ports:
       - "84:8080"
