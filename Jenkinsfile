@@ -1,13 +1,18 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'docker:24-dind' 
+      args  '-v /var/run/docker.sock:/var/run/docker.sock'
+    }
+  }
 
   environment {
     IMAGE_NAME     = "matiasjara1901244/proyectogps-backend"
     DOCKERHUB_CRED = 'docker-hub-creds'
     SSH_CRED       = 'ssh-prod'
-    REMOTE_USER    = 'matiasjara1901'
+    REMOTE_USER    = 'matiasjara1901244'
     REMOTE_HOST    = '190.13.177.173'
-    REMOTE_PATH    = '/home/matiasjara1901'    // donde está tu docker-compose.yml
+    REMOTE_PATH    = '/home/matiasjara1901'
   }
 
   stages {
@@ -19,9 +24,7 @@ pipeline {
 
     stage('Build Docker Image') {
       steps {
-        script {
-          sh "docker build -t ${IMAGE_NAME}:latest ."
-        }
+        sh "docker build -t ${IMAGE_NAME}:latest ."
       }
     }
 
@@ -37,13 +40,15 @@ pipeline {
 
     stage('Deploy to Production') {
       steps {
-        sshagent(credentials: [SSH_CRED]) {
-          sh """
-            ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \\
-              'docker pull ${IMAGE_NAME}:latest && \\
-               cd ${REMOTE_PATH} && \\
-               docker-compose up -d'
-          """
+        script {
+          sshagent(credentials: [SSH_CRED]) {
+            sh """
+              ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \\
+                'docker pull ${IMAGE_NAME}:latest && \\
+                 cd ${REMOTE_PATH} && \\
+                 docker-compose up -d'
+            """
+          }
         }
       }
     }
@@ -51,10 +56,10 @@ pipeline {
 
   post {
     success {
-      echo 'Despliegue completado correctamente'
+      echo '✅ Despliegue completado correctamente'
     }
     failure {
-      echo 'Hubo un error en el pipeline'
+      echo '❌ Hubo un error en el pipeline'
     }
   }
 }
