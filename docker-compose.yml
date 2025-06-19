@@ -43,7 +43,7 @@ services:
     #ports:
     #  - "9100:9100"
 
-  jjenkins:
+  jenkins:
     build:
       context: .
       dockerfile: Dockerfile.jenkins
