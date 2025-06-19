@@ -51,10 +51,10 @@ pipeline {
 
   post {
     success {
-      echo '✅ Despliegue completado correctamente'
+      echo 'Despliegue completado correctamente'
     }
     failure {
-      echo '❌ Hubo un error en el pipeline'
+      echo 'Hubo un error en el pipeline'
     }
   }
 }
