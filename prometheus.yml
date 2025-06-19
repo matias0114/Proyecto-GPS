@@ -14,3 +14,6 @@ scrape_configs:
   - job_name: 'nodeexporter'
     static_configs:
       - targets: ['node_exporter:9100']
+
+      # Uncomment the following lines to enable scraping of Jenkins metrics
+  # - job_name: 'jenkins'  prueba
