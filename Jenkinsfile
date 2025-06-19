@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'docker:24-dind' 
+      image 'docker:24-dind'
       args  '-v /var/run/docker.sock:/var/run/docker.sock'
     }
   }
@@ -17,14 +17,14 @@ pipeline {
 
   stages {
     stage('Checkout') {
-      steps {
-        checkout scm
-      }
+      steps { checkout scm }
     }
 
     stage('Build Docker Image') {
       steps {
-        sh "docker build -t ${IMAGE_NAME}:latest ."
+        dir('Back/Backend') {
+          sh "docker build -t ${IMAGE_NAME}:latest ."
+        }
       }
     }
 
@@ -41,7 +41,7 @@ pipeline {
     stage('Deploy to Production') {
       steps {
         script {
-          sshagent(credentials: [SSH_CRED]) {
+          sshagent([SSH_CRED]) {
             sh """
               ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \\
                 'docker pull ${IMAGE_NAME}:latest && \\
@@ -55,11 +55,7 @@ pipeline {
   }
 
   post {
-    success {
-      echo '✅ Despliegue completado correctamente'
-    }
-    failure {
-      echo '❌ Hubo un error en el pipeline'
-    }
+    success { echo '✅ Despliegue completado correctamente' }
+    failure { echo '❌ Hubo un error en el pipeline' }
   }
 }
