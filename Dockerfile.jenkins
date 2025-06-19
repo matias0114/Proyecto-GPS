@@ -3,9 +3,9 @@ FROM jenkins/jenkins:lts
 
 USER root
 
-# Instalamos sólo el cliente Docker
+# Instalamos el cliente Docker desde los repositorios oficiales de Debian
 RUN apt-get update && \
-    apt-get install -y docker-ce-cli && \
+    apt-get install -y docker.io && \
     rm -rf /var/lib/apt/lists/*
 
 USER jenkins
