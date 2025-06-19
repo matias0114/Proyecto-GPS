@@ -7,12 +7,11 @@ pipeline {
   }
 
   environment {
-    IMAGE_NAME     = "matiasjara1901244/proyectogps-backend"
-    DOCKERHUB_CRED = 'docker-hub-creds'
-    SSH_CRED       = 'ssh-prod'
-    REMOTE_USER    = 'matiasjara1901244'
-    REMOTE_HOST    = '190.13.177.173'
-    REMOTE_PATH    = '/home/matiasjara1901'
+    IMAGE_NAME  = "matiasjara1901244/proyectogps-backend"
+    SSH_CRED    = 'ssh-prod'
+    REMOTE_USER = 'matiasjara1901244'
+    REMOTE_HOST = '190.13.177.173'
+    REMOTE_PATH = '/home/matiasjara1901'
   }
 
   stages {
@@ -20,7 +19,7 @@ pipeline {
       steps { checkout scm }
     }
 
-    stage('Build Docker Image') {
+    stage('Build') {
       steps {
         dir('Back/Backend') {
           sh "docker build -t ${IMAGE_NAME}:latest ."
@@ -28,27 +27,31 @@ pipeline {
       }
     }
 
-    stage('Push to Docker Hub') {
+    stage('Login & Push to Docker Hub') {
       steps {
-        script {
-          docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CRED) {
-            sh "docker push ${IMAGE_NAME}:latest"
-          }
+        // Extraigo USER y PASS desde las credenciales de Jenkins
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-creds',
+                                         usernameVariable: 'DOCKERHUB_USER',
+                                         passwordVariable: 'DOCKERHUB_PASS')]) {
+          sh '''
+            # hago login
+            echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USER" --password-stdin
+            # y subo la imagen
+            docker push ${IMAGE_NAME}:latest
+          '''
         }
       }
     }
 
     stage('Deploy to Production') {
       steps {
-        script {
-          sshagent([SSH_CRED]) {
-            sh """
-              ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \\
-                'docker pull ${IMAGE_NAME}:latest && \\
-                 cd ${REMOTE_PATH} && \\
-                 docker-compose up -d'
-            """
-          }
+        sshagent([SSH_CRED]) {
+          sh """
+            ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} \\
+              'docker pull ${IMAGE_NAME}:latest && \\
+               cd ${REMOTE_PATH} && \\
+               docker-compose up -d'
+          """
         }
       }
     }
