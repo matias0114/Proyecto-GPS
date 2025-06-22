@@ -10,29 +10,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "paciente") // Opcional: especificar nombre de tabla
+@Table(name = "paciente")
 public class Paciente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_paciente") // Nombre de columna PK en la BD
+    @Column(name = "id_paciente")
     private Long id;
 
     private String nombre;
     private String apellido;
 
-    @Column(unique = true) // DNI debe ser único en la tabla
+    @Column(unique = true)
     private String dni;
 
-    // Mapear fecha de nacimiento; JPA soporta java.time.LocalDate desde JPA
-    // 2.2:contentReference[oaicite:1]{index=1}
     private LocalDate fechaNacimiento;
 
     private String direccion;
     private String telefono;
 
-    // Getters y setters de todos los campos...
-    // Getters y Setters para la clase Paciente
 
     public Long getId() {
         return id;
