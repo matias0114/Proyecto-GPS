@@ -60,6 +60,7 @@ services:
     user: root
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+      JENKINS_SLAVE_AGENT_PORT: 0
 
 volumes:
     grafana-data:
