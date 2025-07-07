@@ -18,6 +18,7 @@ services:
       DATA_SOURCE_NAME: "postgresql://gps:D4bgSZVUlMYcx2fdtLvFED28lEl1Gsy5@dpg-d0sgjdemcj7s73f0as7g-a.oregon-postgres.render.com:5432/proyectogps?sslmode=require"
     #ports:
     #  - "9187:9187"
+    
   prometheus:
     image: prom/prometheus
     container_name: prometheus
