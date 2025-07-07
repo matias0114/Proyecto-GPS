@@ -32,7 +32,7 @@ services:
     container_name: grafana
     restart: always
     ports:
-      - "83:3000"
+      - "8003:3000"
     volumes:
       - grafana-data:/var/lib/grafana
 
@@ -50,7 +50,7 @@ services:
     image: jenkins-with-docker
     container_name: jenkins
     ports:
-      - "84:8080"
+      - "8004:8080"
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
