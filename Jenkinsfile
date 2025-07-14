@@ -49,7 +49,6 @@ pipeline {
               docker run -d \\
                 --name       gps-backend \\
                 --restart    always \\
-                -p 8080:8080 \\
                 ${IMAGE_NAME}:latest'
           """
         }
