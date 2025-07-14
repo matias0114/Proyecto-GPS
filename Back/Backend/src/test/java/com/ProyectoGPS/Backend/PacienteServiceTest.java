@@ -39,7 +39,7 @@ class PacienteServiceTest {
         entidad.setId(1L);
         entidad.setNombre("Juan");
         entidad.setApellido("Pérez");
-        entidad.setDni("12345678");
+        entidad.setRut("12345678");
         entidad.setFechaNacimiento(LocalDate.of(1990, 1, 1));
         entidad.setDireccion("Calle Falsa 123");
         entidad.setTelefono("555-1234");
@@ -48,7 +48,7 @@ class PacienteServiceTest {
         dto.setId(1L);
         dto.setNombre("Juan");
         dto.setApellido("Pérez");
-        dto.setDni("12345678");
+        dto.setRut("12345678");
         dto.setFechaNacimiento(LocalDate.of(1990, 1, 1));
         dto.setDireccion("Calle Falsa 123");
         dto.setTelefono("555-1234");
@@ -66,7 +66,7 @@ class PacienteServiceTest {
             .satisfies(d -> {
                 assertThat(d.getId()).isEqualTo(1L);
                 assertThat(d.getNombre()).isEqualTo("Juan");
-                assertThat(d.getDni()).isEqualTo("12345678");
+                assertThat(d.getRut()).isEqualTo("12345678");
             });
 
         verify(repo).findAll();
@@ -84,11 +84,11 @@ class PacienteServiceTest {
     }
 
     @Test
-    void findByDni_noExistente_retornaOptionalVacio() {
-        when(repo.findByDni("0000")).thenReturn(Optional.empty());
+    void findByRut_noExistente_retornaOptionalVacio() {
+        when(repo.findByRut("0000")).thenReturn(Optional.empty());
 
-        assertThat(service.findByDni("0000")).isEmpty();
-        verify(repo).findByDni("0000");
+        assertThat(service.findByRut("0000")).isEmpty();
+        verify(repo).findByRut("0000");
     }
 
     @Test

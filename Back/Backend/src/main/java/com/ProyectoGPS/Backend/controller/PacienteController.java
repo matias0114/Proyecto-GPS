@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -20,7 +21,7 @@ public class PacienteController {
     // dentro de PacienteController
 @PostMapping
     public ResponseEntity<PacienteDTO> crearPaciente(@RequestBody PacienteDTO pacienteDTO) {
-        if (pacienteService.findByDni(pacienteDTO.getDni()).isPresent()) {
+        if (pacienteService.findByRut(pacienteDTO.getRut()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         return ResponseEntity.ok(pacienteService.save(pacienteDTO));
@@ -32,10 +33,11 @@ public class PacienteController {
         return pacienteService.findAll();
     }
 
-    // 3. Buscar paciente por DNI (READ - individual)
-    @GetMapping("/{dni}")
-    public ResponseEntity<PacienteDTO> obtenerPacientePorDni(@PathVariable String dni) {
-        return pacienteService.findByDni(dni)
+
+    // Mantener el endpoint genérico por compatibilidad
+    @GetMapping("/{rut}")
+    public ResponseEntity<PacienteDTO> obtenerPacientePorRut(@PathVariable String rut) {
+        return pacienteService.findByRut(rut)
                               .map(ResponseEntity::ok)
                               .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -50,5 +52,39 @@ public class PacienteController {
                                                   .collect(Collectors.toList());
 
         return ResponseEntity.ok(guardados);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PacienteDTO> actualizarPaciente(
+        @PathVariable Long id,
+        @RequestBody PacienteDTO pacienteDTO
+    ) {
+        return pacienteService.findById(id)
+            .map(existing -> {
+                pacienteDTO.setId(id);
+                PacienteDTO actualizado = pacienteService.save(pacienteDTO);
+                return ResponseEntity.ok(actualizado);
+            })
+            .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/beneficiarios")
+    public List<PacienteDTO> listarSoloBeneficiarios() {
+        return pacienteService.findBeneficiarios();
+    }
+
+    @PatchMapping("/{id}/beneficiario")
+    public ResponseEntity<PacienteDTO> toggleBeneficiario(
+        @PathVariable Long id,
+        @RequestBody Map<String, String> body
+    ) {
+        Boolean esBen = Boolean.valueOf(body.get("esBeneficiario"));
+        String tipo = body.get("tipoBeneficio");
+        try {
+            PacienteDTO actualizado = pacienteService.actualizarBeneficio(id, esBen, tipo);
+            return ResponseEntity.ok(actualizado);
+        } catch (jakarta.persistence.EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

@@ -1,12 +1,16 @@
 package com.ProyectoGPS.Backend.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,13 +26,22 @@ public class Paciente {
     private String apellido;
 
     @Column(unique = true)
-    private String dni;
+    private String rut;
 
     private LocalDate fechaNacimiento;
 
     private String direccion;
     private String telefono;
 
+    // --- NUEVOS CAMPOS PARA BENEFICIARIOS ---
+    @Column(name = "es_beneficiario", nullable = false)
+    private Boolean esBeneficiario = false;
+
+    @Column(name = "tipo_beneficio")
+    private String tipoBeneficio;
+
+    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HistorialClinico> historiales = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -54,12 +67,12 @@ public class Paciente {
         this.apellido = apellido;
     }
 
-    public String getDni() {
-        return dni;
+    public String getRut() {
+        return rut;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setRut(String rut) {
+        this.rut = rut;
     }
 
     public LocalDate getFechaNacimiento() {
@@ -84,6 +97,32 @@ public class Paciente {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    // getter y setter de esBeneficiario
+    public Boolean getEsBeneficiario() {
+        return esBeneficiario;
+    }
+    
+    public void setEsBeneficiario(Boolean esBeneficiario) {
+        this.esBeneficiario = esBeneficiario;
+    }
+
+    // getter y setter de tipoBeneficio
+    public String getTipoBeneficio() {
+        return tipoBeneficio;
+    }
+    
+    public void setTipoBeneficio(String tipoBeneficio) {
+        this.tipoBeneficio = tipoBeneficio;
+    }
+
+    public List<HistorialClinico> getHistoriales() {
+        return historiales;
+    }
+
+    public void setHistoriales(List<HistorialClinico> historiales) {
+        this.historiales = historiales;
     }
 
 }
