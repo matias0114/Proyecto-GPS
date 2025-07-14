@@ -38,6 +38,7 @@ public class SecurityConfig {
         cfg.setAllowedOriginPatterns(List.of(
             "http://190.13.177.173:8080",
             "http://190.13.177.173:85",
+            "http://190.13.177.173:8005",
             "http://localhost:4200"
         ));
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
