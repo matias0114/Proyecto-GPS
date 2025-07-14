@@ -12,8 +12,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: 8lsWOLx1Ub4jFnMKJFrnTXZTBcJ2VgbH
     networks:
       - backend-net
-    restart: always
-    
+
+
   postgres_exporter:
     image: prometheuscommunity/postgres-exporter
     container_name: postgres_exporter
@@ -63,6 +63,10 @@ services:
     user: root
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+
+networks:
+  backend-net:
+    external: true
 
 volumes:
     grafana-data:
