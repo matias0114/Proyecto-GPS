@@ -40,11 +40,12 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.setAllowedOrigins(List.of(
-            "http://190.13.177.173:8080",
+            "http://190.13.177.173",
+            "http://190.13.177.173:80",
             "http://190.13.177.173:85",
             "http://190.13.177.173:8005",
-            "http://localhost:4200",
-            "http://springboot-app:8080"
+            "http://190.13.177.173:8080",
+            "http://localhost:4200"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "*"));
