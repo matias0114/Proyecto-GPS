@@ -1,12 +1,12 @@
 package com.ProyectoGPS.Backend;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.core.Ordered;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -20,39 +20,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors().and() // habilita CORS
-            .csrf().disable() // deshabilita CSRF para API REST
+            .cors().and()
+            .csrf().disable()
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/actuator/prometheus").permitAll()
                 .anyRequest().permitAll()
             )
-            .httpBasic(); // autenticación básica (puedes cambiarlo después)
+            .httpBasic();
         return http.build();
     }
 
-    @Bean
-    public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
+    // Esta configuración se usa para el filtro manual de CORS
+    private CorsConfiguration buildCorsConfig() {
         CorsConfiguration cfg = new CorsConfiguration();
         cfg.setAllowCredentials(true);
-
-        // Acepta orígenes desde localhost, contenedores, red local y navegadores
-        cfg.setAllowedOriginPatterns(List.of(
-            "http://localhost:*",
-            "http://gps-backend:*",
-            "http://190.13.177.173:*"
-        ));
-
+        cfg.setAllowedOriginPatterns(List.of("*")); // Acepta todos los orígenes (útil en red interna)
         cfg.addAllowedHeader("*");
         cfg.addAllowedMethod("*");
         cfg.addExposedHeader("Authorization");
         cfg.addExposedHeader("Content-Type");
         cfg.setMaxAge(3600L);
+        return cfg;
+    }
 
+    // Filtro con prioridad alta que se aplica antes que Spring Security
+    @Bean
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", cfg);
+        source.registerCorsConfiguration("/**", buildCorsConfig());
 
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
-        bean.setOrder(Ordered.HIGHEST_PRECEDENCE); // Muy importante
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE); // Prioridad máxima
         return bean;
     }
 }
