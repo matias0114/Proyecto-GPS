@@ -23,6 +23,7 @@ pipeline {
     stage('Build & Push') {
       steps {
         dir('Back/Backend') {
+          // construye la imagen usando el Dockerfile de /Backend
           sh "docker build -t ${IMAGE_NAME}:latest ."
         }
         withCredentials([usernamePassword(
@@ -50,8 +51,7 @@ pipeline {
                 --name gps-backend \\ 
                 --restart always \\ 
                 ${IMAGE_NAME}:latest'
-            '
-            docker network connect backend-net gps-backend
+            docker network connect backend-net gps-backend'
           """
         }
       }
