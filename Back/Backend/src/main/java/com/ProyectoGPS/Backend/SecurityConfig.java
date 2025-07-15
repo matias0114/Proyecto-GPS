@@ -39,7 +39,8 @@ public class SecurityConfig {
             "http://190.13.177.173:8080",
             "http://190.13.177.173:85",
             "http://190.13.177.173:8005",
-            "http://localhost:4200"
+            "http://localhost:4200",
+            "http://gps-backend:8080"
         ));
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         cfg.setAllowedHeaders(List.of("*"));
