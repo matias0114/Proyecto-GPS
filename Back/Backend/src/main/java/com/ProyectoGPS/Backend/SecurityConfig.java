@@ -37,6 +37,7 @@ public class SecurityConfig {
         cfg.setAllowCredentials(true);
         cfg.addAllowedOrigin("http://localhost:4200");
         cfg.addAllowedOrigin("http://gps-backend:8080");
+        cfg.addAllowedOrigin("http://190.13.177.173:8005");
         cfg.addAllowedMethod("*");
         cfg.addAllowedHeader("*");
         cfg.addExposedHeader("Authorization");
