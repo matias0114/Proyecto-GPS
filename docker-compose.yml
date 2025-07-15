@@ -4,8 +4,8 @@ services:
   backend:
     image: matiasjara1901244/proyectogps-backend:latest
     container_name: gps-backend
-    #ports:
-    #  - "8081:8081"
+    ports:
+      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-d1osq23uibrs73d4hrig-a.oregon-postgres.render.com:5432/postgresss_33h5?sslmode=require
       SPRING_DATASOURCE_USERNAME: postgresss_33h5_user
