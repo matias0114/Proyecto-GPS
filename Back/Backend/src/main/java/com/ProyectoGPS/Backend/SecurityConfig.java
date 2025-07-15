@@ -5,9 +5,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.core.Ordered;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
@@ -18,35 +20,39 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // 1) Habilita CORS usando el CorsConfigurationSource de más abajo
-            .cors().and()
-            // 2) Deshabilita CSRF para API REST
-            .csrf().disable()
-            // 3) Permite todas las peticiones (ajusta esto si luego quieres protección)
+            .cors().and() // habilita CORS
+            .csrf().disable() // deshabilita CSRF para API REST
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/actuator/prometheus").permitAll()
                 .anyRequest().permitAll()
             )
-            .httpBasic();
+            .httpBasic(); // autenticación básica (puedes cambiarlo después)
         return http.build();
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         CorsConfiguration cfg = new CorsConfiguration();
         cfg.setAllowCredentials(true);
-        cfg.addAllowedOrigin("http://localhost:4200");
-        cfg.addAllowedOrigin("http://gps-backend:8080");
-        cfg.addAllowedOrigin("http://190.13.177.173:8005");
-        cfg.addAllowedMethod("*");
+
+        // Acepta orígenes desde localhost, contenedores, red local y navegadores
+        cfg.setAllowedOriginPatterns(List.of(
+            "http://localhost:*",
+            "http://gps-backend:*",
+            "http://190.13.177.173:*"
+        ));
+
         cfg.addAllowedHeader("*");
+        cfg.addAllowedMethod("*");
         cfg.addExposedHeader("Authorization");
         cfg.addExposedHeader("Content-Type");
         cfg.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Aplica este CORS a todas las rutas
         source.registerCorsConfiguration("/**", cfg);
-        return source;
+
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE); // Muy importante
+        return bean;
     }
 }
