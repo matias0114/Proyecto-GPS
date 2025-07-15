@@ -35,10 +35,12 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
         cfg.setAllowCredentials(true);
-        cfg.setAllowedOriginPatterns(List.of("*"));
-        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        cfg.setAllowedHeaders(List.of("*"));
-        cfg.setExposedHeaders(List.of("Authorization", "Content-Type"));
+        cfg.addAllowedOrigin("http://localhost:4200");
+        cfg.addAllowedOrigin("http://gps-backend:8080");
+        cfg.addAllowedMethod("*");
+        cfg.addAllowedHeader("*");
+        cfg.addExposedHeader("Authorization");
+        cfg.addExposedHeader("Content-Type");
         cfg.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
