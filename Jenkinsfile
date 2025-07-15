@@ -49,7 +49,7 @@ pipeline {
               docker run -d \
                 --name       gps-backend \
                 --restart    always \
-                ${IMAGE_NAME}:latest'
+                ${IMAGE_NAME}:latest
             '
 
             docker network connect backend-net gps-backend
