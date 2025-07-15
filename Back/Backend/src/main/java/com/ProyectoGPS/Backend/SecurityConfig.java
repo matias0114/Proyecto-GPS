@@ -20,41 +20,40 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Habilita CORS usando el CorsConfigurationSource de más abajo
-                .cors(withDefaults())
-                // Deshabilita CSRF para API REST
-                .csrf(csrf -> csrf.disable())
-                // Configura las solicitudes OPTIONS para que no se bloqueen
-                .authorizeRequests(auth -> auth
-                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Permite solicitudes OPTIONS
-                                .requestMatchers("/actuator/prometheus").permitAll()
-                                .anyRequest().permitAll()
-                )
-                .httpBasic(withDefaults());
+            .cors(withDefaults())
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/**").permitAll()
+                .requestMatchers("/actuator/prometheus").permitAll()
+                .anyRequest().authenticated()
+            )
+            .httpBasic(withDefaults());
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowCredentials(true);
-
-        // Cambié setAllowedOriginPatterns a setAllowedOrigins para mayor compatibilidad
-        cfg.setAllowedOrigins(List.of(
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(List.of(
             "http://190.13.177.173:8080",
             "http://190.13.177.173:85",
             "http://190.13.177.173:8005",
             "http://localhost:4200",
             "http://springboot-app:8080"
         ));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "*"));
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setMaxAge(3600L); // cache preflight
 
-        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        cfg.setAllowedHeaders(List.of("*"));
-        cfg.setExposedHeaders(List.of("Authorization", "Content-Type"));
-
+        // Para mayor compatibilidad con Spring Security 6, usar registerCorsConfiguration correctamente
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Aplica este CORS a todas las rutas
-        source.registerCorsConfiguration("/**", cfg);
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
