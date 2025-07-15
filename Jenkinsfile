@@ -43,15 +43,16 @@ pipeline {
       steps {
         sshagent([SSH_CRED]) {
           sh """
-            ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} '\\
-              docker pull ${IMAGE_NAME}:latest && \\ 
-              docker stop gps-backend || true && \\ 
-              docker rm gps-backend || true && \\ 
-              docker run -d \\ 
-                --name gps-backend \\ 
-                --restart always \\ 
-                ${IMAGE_NAME}:latest'
-            docker network connect backend-net gps-backend'
+            ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} ' \
+              docker pull ${IMAGE_NAME}:latest && \ 
+              docker stop gps-backend || true && \ 
+              docker rm gps-backend || true && \ 
+              docker run -d \ 
+                --name gps-backend \ 
+                --restart always \ 
+                ${IMAGE_NAME}:latest && \
+              docker network connect backend-net gps-backend'
+            '
           """
         }
       }
