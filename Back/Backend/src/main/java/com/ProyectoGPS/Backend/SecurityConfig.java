@@ -34,7 +34,7 @@ public class SecurityConfig {
     private CorsConfiguration buildCorsConfig() {
         CorsConfiguration cfg = new CorsConfiguration();
         cfg.setAllowCredentials(true);
-        cfg.setAllowedOriginPatterns(List.of("http://190.13.177.173:8005")); 
+        cfg.setAllowedOriginPatterns(List.of("http://190.13.177.173:8005", "http://localhost:4200")); 
         cfg.addAllowedHeader("*"); 
         cfg.addAllowedMethod("*"); 
         cfg.addExposedHeader("Authorization"); 
