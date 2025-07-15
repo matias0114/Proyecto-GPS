@@ -21,36 +21,35 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors().and()
-            .csrf().disable()
+            .csrf().disable() 
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/actuator/prometheus").permitAll()
+                .requestMatchers("/actuator/prometheus").permitAll() 
                 .anyRequest().permitAll()
             )
             .httpBasic();
         return http.build();
     }
 
-    // Esta configuración se usa para el filtro manual de CORS
+    // Configuración de CORS más estricta
     private CorsConfiguration buildCorsConfig() {
         CorsConfiguration cfg = new CorsConfiguration();
         cfg.setAllowCredentials(true);
-        cfg.setAllowedOriginPatterns(List.of("*")); // Acepta todos los orígenes (útil en red interna)
-        cfg.addAllowedHeader("*");
-        cfg.addAllowedMethod("*");
-        cfg.addExposedHeader("Authorization");
+        cfg.setAllowedOriginPatterns(List.of("http://190.13.177.173:8005")); 
+        cfg.addAllowedHeader("*"); 
+        cfg.addAllowedMethod("*"); 
+        cfg.addExposedHeader("Authorization"); 
         cfg.addExposedHeader("Content-Type");
-        cfg.setMaxAge(3600L);
+        cfg.setMaxAge(3600L); 
         return cfg;
     }
 
-    // Filtro con prioridad alta que se aplica antes que Spring Security
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", buildCorsConfig());
 
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
-        bean.setOrder(Ordered.HIGHEST_PRECEDENCE); // Prioridad máxima
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE); 
         return bean;
     }
 }
