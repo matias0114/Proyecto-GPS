@@ -2,14 +2,12 @@ package com.ProyectoGPS.Backend;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import static org.springframework.security.config.Customizer.withDefaults;
 
 import java.util.List;
 
@@ -20,41 +18,36 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(withDefaults())
-            .csrf(csrf -> csrf.disable())
+            // 1) Habilita CORS usando el CorsConfigurationSource de más abajo
+            .cors().and()
+            // 2) Deshabilita CSRF para API REST
+            .csrf().disable()
+            // 3) Permite todas las peticiones (ajusta esto si luego quieres protección)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/**").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/**").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/**").permitAll()
                 .requestMatchers("/actuator/prometheus").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             )
-            .httpBasic(withDefaults());
+            .httpBasic();
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of(
-            "http://190.13.177.173",
-            "http://190.13.177.173:80",
+        CorsConfiguration cfg = new CorsConfiguration();
+        cfg.setAllowCredentials(true);
+        cfg.setAllowedOriginPatterns(List.of(
+            "http://190.13.177.173:8080",
             "http://190.13.177.173:85",
             "http://190.13.177.173:8005",
-            "http://190.13.177.173:8080",
             "http://localhost:4200"
         ));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "*"));
-        configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
-        configuration.setMaxAge(3600L); // cache preflight
+        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        cfg.setAllowedHeaders(List.of("*"));
+        cfg.setExposedHeaders(List.of("Authorization", "Content-Type"));
 
-        // Para mayor compatibilidad con Spring Security 6, usar registerCorsConfiguration correctamente
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        // Aplica este CORS a todas las rutas
+        source.registerCorsConfiguration("/**", cfg);
         return source;
     }
 }
