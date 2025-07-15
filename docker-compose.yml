@@ -4,8 +4,6 @@ services:
   backend:
     image: matiasjara1901244/proyectogps-backend:latest
     container_name: gps-backend
-    ports:
-      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-d1osq23uibrs73d4hrig-a.oregon-postgres.render.com:5432/postgresss_33h5?sslmode=require
       SPRING_DATASOURCE_USERNAME: postgresss_33h5_user
@@ -20,15 +18,11 @@ services:
     restart: always
     environment:
       DATA_SOURCE_NAME: postgresql://postgresss_33h5_user:8lsWOLx1Ub4jFnMKJFrnTXZTBcJ2VgbH@dpg-d1osq23uibrs73d4hrig-a.oregon-postgres.render.com:5432/postgresss_33h5?sslmode=require
-    #ports:
-    #  - "9187:9187"
     
   prometheus:
     image: prom/prometheus
     container_name: prometheus
     restart: always
-    #ports:
-    #  - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
@@ -45,8 +39,6 @@ services:
     image: prom/node-exporter
     container_name: node_exporter
     restart: always
-    #ports:
-    #  - "9100:9100"
 
   jenkins:
     build:
