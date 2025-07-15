@@ -3,7 +3,7 @@ version: '3.8'
 services:
   backend:
     image: matiasjara1901244/proyectogps-backend:latest
-    container_name: springboot-app
+    container_name: gps-backend
     #ports:
     #  - "8081:8081"
     environment:
