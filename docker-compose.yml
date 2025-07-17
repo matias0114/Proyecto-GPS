@@ -16,6 +16,8 @@ services:
     image: prometheuscommunity/postgres-exporter
     container_name: postgres_exporter
     restart: always
+    networks:
+      - backend-net
     environment:
       DATA_SOURCE_NAME: postgresql://postgresss_33h5_user:8lsWOLx1Ub4jFnMKJFrnTXZTBcJ2VgbH@dpg-d1osq23uibrs73d4hrig-a.oregon-postgres.render.com:5432/postgresss_33h5?sslmode=require
     
@@ -23,6 +25,8 @@ services:
     image: prom/prometheus
     container_name: prometheus
     restart: always
+    networks:
+      - backend-net
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
@@ -39,6 +43,8 @@ services:
     image: prom/node-exporter
     container_name: node_exporter
     restart: always
+    networks:
+      - backend-net
 
   jenkins:
     build:
