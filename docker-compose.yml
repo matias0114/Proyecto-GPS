@@ -38,6 +38,8 @@ services:
       - "8003:3000"
     volumes:
       - grafana-data:/var/lib/grafana
+    networks:
+      - backend-net
 
   node_exporter:
     image: prom/node-exporter
